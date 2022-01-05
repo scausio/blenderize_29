@@ -1,0 +1,8 @@
+from blenderize_29.blenderizator import  BlenderGrid
+path_to_grd= "path/to/file.grd"
+bathyCoeff=1
+
+grid=BlenderGrid('test', path_to_grd, 'shyfem_grid',bathyCoeff)
+
+# save the mesh to grd
+grid.save()
