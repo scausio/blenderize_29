@@ -3,6 +3,8 @@ path_to_grd= "path/to/file.grd"
 bathyCoeff=1
 
 grid=BlenderGrid('test', path_to_grd, 'shyfem_grid',bathyCoeff)
-
+from blenderize_29.blenderizator import  BlenderGrid
+p='/Users/scausio/Dropbox (CMCC)/PycharmData/ww3_tools/gridTools/data/ianos/ionian.msh'
+grid=BlenderGrid('test', p, 'ww3')
 # save the mesh to grd
 grid.save()

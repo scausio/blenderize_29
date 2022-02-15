@@ -1,0 +1,6 @@
+xarray
+scipy
+shapely
+fiona
+netcdf4
+numpy

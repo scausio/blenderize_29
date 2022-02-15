@@ -1,10 +1,10 @@
 import numpy as np
 
 class GmeshMSH():
-    def __init__(self, grdPath):
+    def __init__(self, grdPath,bathyCoeff):
         self.path = grdPath
         self.getNodes_Elements()
-        self.bathyCoeff=0.0001
+        self.bathyCoeff=bathyCoeff
 
     def getNodes_Elements(self):
         self.grid = open(self.path).read()
@@ -15,7 +15,7 @@ class GmeshMSH():
         self.elems=np.array([i.split() for i in tris]).astype(int)
 
 
-    def triToNumpy(self,outfile):
+    def triToNumpy(self):
         self.getTri()
         lon=self.nodes[:, -3]
         lat = self.nodes[:, -2]

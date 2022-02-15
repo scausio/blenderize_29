@@ -3,9 +3,9 @@ import numpy as np
 from blenderize_29.shyfem import ShyfemGrid
 from blenderize_29.gmsh import GmeshMSH
 from blenderize_29.writer import Writer
+from blenderize_29.netcdf import NcBathy_unstruct, NcBathy_regular
 import bpy
 import xarray as xr
-
 
 
 # SORT SEGMENT
@@ -26,7 +26,6 @@ def sortEdges(edges):
         nextVertex = [v for v in edgesIndex.get(segment[-1]) if v != segment[-2]]
     return segment
 
-
 class BlenderGrid():
     def __init__(self, name, file_path, dataType, bathyCoeff=1, fillValue=False):
         self.name=name
@@ -42,9 +41,17 @@ class BlenderGrid():
             self.grid = ShyfemGrid(file_path, bathyCoeff, box)
             self.v, self.t = self.grid.triFromGrdToNumpy(os.path.join(outPath, 'box.npz'))
             self.l = []
+        elif dataType=='ww3': # this get triangulation from file_path
+            self.grid = GmeshMSH(file_path,bathyCoeff)
+            self.v, self.t = self.grid.triToNumpy()
+            self.l = []
+        elif dataType=='nc_regular': # this get triangulation from file_path
+            self.grid = NcBathy_regular(file_path,bathyCoeff)
+            self.v, self.t = self.grid.()
+            self.l = []
 
         else:
-            print ('NOT VALID DATATYPE!\n init:  name, path, bathyCoeff, box, dataType\n datatype:  shyfem_grid')
+            print ('NOT VALID DATATYPE!\n init:  name, path, bathyCoeff, box, dataType\n datatype:  shyfem_grid, ww3, nc_regular')
             return
         self.ob=self.loadObj( name)
 

@@ -30,9 +30,29 @@ class Writer:
             np.savetxt(out, elems, fmt='%i %i %i %i %i %i %i')
 
 
+    def writeWW3(self):
+        self.mesh[:, -1] = self.mesh[:, -1] / self.grid_obj.grid.bathyCoeff
+        outNodes = np.array((range(1, len(self.mesh) + 1, 1), self.mesh[:, 0], self.mesh[:, 1], self.mesh[:, 2])).T
+        elems = np.array([list(poly.vertices) for poly in self.m.polygons])
+        print(len(elems))
+        outElems = np.array((range(1, len(elems) + 1, 1), np.zeros(len(elems)) + 2, np.zeros(len(elems)) + 2,
+                             np.zeros(len(elems)), np.zeros(len(elems)) + 1, elems[:, 0] + 1, elems[:, 1] + 1,
+                             elems[:, 2] + 1)).T
+        with open(os.path.join(self.grid_obj.outPath,'%s.msh'%self.grid_obj.name), 'w') as outfile:
+            outfile.write('$MeshFormat\n2.2 0 8\n$EndMeshFormat\n$Nodes\n')
+            outfile.write('%s\n' % len(self.mesh))
+            np.savetxt(outfile, outNodes, fmt='%i %.6f %.6f %.1f')
+            outfile.write('$EndNodes\n$Elements\n')
+            outfile.write('%s\n' % len(elems))
+            np.savetxt(outfile, outElems, fmt='%i')
+            outfile.write('$EndElements\n')
+        outfile.close()
+
     def write(self):
 
         if self.obj_type=='shyfem_grid':
             self.writeGrd()
+        elif self.obj_type=='ww3':
+            self.writeWW3()
         else:
             print ("%s write not implemented yet"%self.obj_type)

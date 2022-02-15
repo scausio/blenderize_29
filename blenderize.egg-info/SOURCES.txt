@@ -1,0 +1,7 @@
+README
+setup.py
+blenderize.egg-info/PKG-INFO
+blenderize.egg-info/SOURCES.txt
+blenderize.egg-info/dependency_links.txt
+blenderize.egg-info/requires.txt
+blenderize.egg-info/top_level.txt
