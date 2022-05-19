@@ -29,3 +29,11 @@ class ww3MSH():
             self.grid[self.grid.index('$EndElements'):].split(
                 '\n'))
         print (self.end)
+    def saveBC(self):
+        me=bpy.context.view_layer.objects.active.data
+        self.me=me
+        bpy.ops.object.mode_set(mode='OBJECT')
+        id=[int(i.index)+1 for i in list(me.vertices) if i.select == True]
+
+        np.savetxt(os.path.join(self.path, '{}_bc.dat'.format(self.name)), id,fmt='%i')
+

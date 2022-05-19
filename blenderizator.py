@@ -33,6 +33,7 @@ class BlenderGrid():
         self.outPath = outPath = os.path.dirname(file_path)
         self.dataType=dataType
         self.fv=fillValue
+        self.bathyCoeff=bathyCoeff
         box=[[ -90,90],[ -180,180]]
         print (outPath)
         if not os.path.exists(outPath):
@@ -41,17 +42,32 @@ class BlenderGrid():
             self.grid = ShyfemGrid(file_path, bathyCoeff, box)
             self.v, self.t = self.grid.triFromGrdToNumpy(os.path.join(outPath, 'box.npz'))
             self.l = []
+        if dataType=='shyfem_bathy': # this get triangulation from file_path
+            self.grid = ShyfemGrid(file_path, bathyCoeff, box)
+            v, t = self.grid.boxToNumpy(os.path.join(outPath, 'box.npz'))
+            l=[]
         elif dataType=='ww3': # this get triangulation from file_path
             self.grid = GmeshMSH(file_path,bathyCoeff)
             self.v, self.t = self.grid.triToNumpy()
             self.l = []
         elif dataType=='nc_regular': # this get triangulation from file_path
             self.grid = NcBathy_regular(file_path,bathyCoeff)
-            self.v, self.t = self.grid.()
+            self.v, self.t = self.grid.toNumpy()
             self.l = []
+        elif dataType=='npz': # this get triangulation from file_path
+            # save np.load
+            np_load_old = np.load
+            # modify the default parameters of np.load
+            np.load = lambda *a, **k: np_load_old(*a, allow_pickle=True, **k)
+            self.grid = np.load(file_path,bathyCoeff)
+            ds = np.load(file_path)
+            print (ds)
+            self.v= ds['vertices']
+            self.t=[]
+            self.l = ds['edges']
 
         else:
-            print ('NOT VALID DATATYPE!\n init:  name, path, bathyCoeff, box, dataType\n datatype:  shyfem_grid, ww3, nc_regular')
+            print ('NOT VALID DATATYPE!\n init:  name, path, dataType, bathyCoeff\n datatype:  shyfem_grid, ww3, nc_regular, shyfem_bathy')
             return
         self.ob=self.loadObj( name)
 

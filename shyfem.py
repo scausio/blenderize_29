@@ -74,8 +74,8 @@ class ShyfemGrid():
 
     def boxToNumpy(self, outfile):
         self.triangulateElems()
-        np.savez(outfile, v=np.array((self.longitude, self.latitude, self.depth * -self.bathyCoeff)).T, t=self.tri)
-        return np.array((self.longitude, self.latitude, self.depth * -self.bathyCoeff)).T, self.tri
+        np.savez(outfile, v=np.array((self.longitude, self.latitude, self.depth * self.bathyCoeff)).T, t=self.tri)
+        return np.array((self.longitude, self.latitude, self.depth * self.bathyCoeff)).T, self.tri
 
 
     def saveGrd(self, outfile):

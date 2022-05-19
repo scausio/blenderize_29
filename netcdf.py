@@ -13,7 +13,7 @@ def findCoord(ds, coords):
 def getCoordsName(ds):
     lons=['longitude','lon', 'x','X']
     lats=['latitude','lat','y','Y']
-    depths=['total_depth', 'depth', 'Bathy', 'Bathymetry', 'z','Z','bathy','bathymetry']
+    depths=['total_depth', 'depth', 'Bathy', 'Bathymetry', 'z','Z','bathy','bathymetry','bathy_metry']
     lonName=findCoord(ds, lons)
     latName=findCoord(ds,lats)
     depthName=findCoord(ds,depths)
@@ -47,24 +47,28 @@ class NcBathy_unstruct():
 
 
 class NcBathy_regular():
-    def __init__(self, filePath,bathyCoeff,fillValue=-10):
+    def __init__(self, filePath,bathyCoeff,fillValue=10):
         self.path = filePath
         self.bathyCoeff=bathyCoeff
         self.fv=fillValue
         self.regularToScatter()
     def readFile(self):
         ds = nc.Dataset(self.path)
-        lonName, latName, depthName = getCoordsName(ds)
+        #lonName, latName, depthName = getCoordsName(ds)
         print (ds)
-        #lon = ds['nav_lon'][0].filled()
-        #lat =ds['nav_lat'][:,0].filled()
-        lon= ds[lonName][:].filled()
-        lat = ds[latName][:].filled()
-        depth = ds[depthName][:].filled()
-        self.nan=np.isnan(depth).flatten()
+        print (ds['bathy_metry'])
 
+        lon = ds['nav_lon'][0].filled()
+        lat =ds['nav_lat'][:,0].filled()
+        depth = -ds['bathy_metry'][0].filled()
+        #lon= ds[lonName][:].filled()
+        #lat = ds[latName][:].filled()
+        #depth = ds[depthName][0].filled()
+        print (np.nanmin(depth),np.nanmax(depth))
         if self.fv:
-            depth[depth==self.fv]=np.nan
+            pass
+            #depth[depth==self.fv]=np.nan
+        self.nan = np.isnan(depth).flatten()
         self.ds=ds
         return lon,lat,depth
 
@@ -74,14 +78,14 @@ class NcBathy_regular():
         xx,yy=np.meshgrid(x,y)
         self.lon=xx.flatten()
         self.lat=yy.flatten()
-        self.depth=z.flatten()*-self.bathyCoeff
+        self.depth=z.flatten()*self.bathyCoeff
         self.triangulate()
 
     def triangulate(self):
         tri = Delaunay(np.vstack((self.lon[np.logical_not(self.nan)], self.lat[np.logical_not(self.nan)])).T)
         self.tri = tri.simplices.copy()
 
-    def toNumpy(self, outfile):
+    def toNumpy(self):
         out=np.array((self.lon, self.lat, self.depth)).T
         return np.array(out), self.tri
 
