@@ -30,7 +30,7 @@ class ww3MSH():
                 '\n'))
         print (self.end)
     def saveBC(self):
-        me=bpy.context.view_layer.objects.active.data
+        me=bpy.context.view_layer.objec.active.data
         self.me=me
         bpy.ops.object.mode_set(mode='OBJECT')
         id=[int(i.index)+1 for i in list(me.vertices) if i.select == True]

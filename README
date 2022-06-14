@@ -14,5 +14,5 @@ grid.save()
 
 
 from blenderize_29.blenderizator import  BlenderGrid
-p='/Users/scausio/Dropbox (CMCC)/PycharmProjects/shapefile/test_sicily.npz'
-grid=BlenderGrid('bs', p, 'npz',0.001)
+p='/Users/scausio/Downloads/sicily_smoothed.msh'
+grid=BlenderGrid('sic', p, 'ww3',0.0001)

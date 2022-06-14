@@ -31,3 +31,5 @@ class GmeshMSH():
         sortedTri = nodeSorter[
             idNodes.searchsorted(vertsIds, sorter=nodeSorter)]  # associate original position to the named index
         self.triangs = sortedTri
+
+

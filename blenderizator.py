@@ -115,7 +115,6 @@ class BlenderGrid():
         obj = bpy.context.object
         mesh = obj.data
         obj.update_from_editmode()  # Loads edit-mode data into object data
-        mskTrans = [True if e.select else False for e in mesh.edges]
 
         selected_edges = [e for e in mesh.edges if e.select]
         selected_nodesId = np.array([tuple((i.vertices[0], i.vertices[1])) for i in selected_edges])  # GET ID
@@ -124,8 +123,17 @@ class BlenderGrid():
         sortedEdges = sortEdges(selected_nodesId)  # GET ORDERED NODES
         sortedCoords = [mesh.vertices[i].co.xy for i in sortedEdges]
 
-        np.save(os.path.join(self.outPath, '{}_transectId'.format(self.name)), sortedEdges)
-        np.save(os.path.join(self.outPath, '{}_transectCo'.format(self.name)),  sortedCoords)
+        np.save(os.path.join(self.outPath, '{}_Id'.format(self.name)), sortedEdges)
+        np.save(os.path.join(self.outPath, '{}_Co'.format(self.name)),  sortedCoords)
 
     def save(self):
         Writer(self).write()
+
+    def saveBC(self):
+        obj = bpy.context.object
+        mesh = obj.data
+        obj.update_from_editmode()
+
+        self.me=mesh
+        id=[int(i.index)+1 for i in list(mesh.vertices) if i.select == True]
+        np.savetxt(os.path.join(self.outPath, '{}_bc.dat'.format(self.name)), id,fmt='%i')

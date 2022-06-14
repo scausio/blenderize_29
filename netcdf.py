@@ -1,7 +1,5 @@
 import numpy as np
 from scipy.spatial.qhull import Delaunay
-import matplotlib.pyplot as plt
-import matplotlib.tri as tri
 import os
 import netCDF4 as nc
 
